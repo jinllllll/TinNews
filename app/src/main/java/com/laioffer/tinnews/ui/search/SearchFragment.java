@@ -6,12 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.GridLayout;
 
 import com.laioffer.tinnews.R;
 import com.laioffer.tinnews.databinding.FragmentSearchBinding;
@@ -46,6 +48,24 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // following 4 lines to init the viewAdapter and the viewManager
+        SearchNewsAdapter newsAdapter = new SearchNewsAdapter();
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
+
+        //implement the spanSizeLookup for different grid size
+        gridLayoutManager.setSpanSizeLookup(
+                new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        return position ==0? 2:1;
+                    }
+                }
+        );
+
+        binding.recyclerView.setLayoutManager(gridLayoutManager);
+        binding.recyclerView.setAdapter(newsAdapter);
+
+        //keyboard input into here
         binding.searchView.setOnEditorActionListener(
                 (v, actionId, event) -> {
                     String searchText = binding.searchView.getText().toString();
@@ -68,6 +88,8 @@ public class SearchFragment extends Fragment {
                         newsResponse -> {
                             if (newsResponse != null) {
                                 Log.d("SearchFragment", newsResponse.toString());
+                                //+ to setArticles
+                                newsAdapter.setArticles(newsResponse.articles);
                             }
                         });
     }
