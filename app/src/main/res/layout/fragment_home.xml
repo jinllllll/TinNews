@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BlankFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
+    <com.mindorks.placeholderview.SwipePlaceHolderView
+        android:id="@+id/swipeView"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rejectBtn"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="0dp" />
+
+    <!--中间竖向辅助线）-->
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="1"
-        android:textSize="100sp"
-    />
-</FrameLayout>
+        android:id="@+id/guideline"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <ImageView
+        android:id="@+id/rejectBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="@id/guideline"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/ic_cancel"/>
+
+    <ImageView
+        android:id="@+id/acceptBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/guideline"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="30dp"
+        android:src="@drawable/ic_heart" />
+    <!--margin_left vs margin start. 从左到右还是从开始到最后（因为也可能是从右到左）-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
