@@ -1,10 +1,15 @@
 package com.laioffer.tinnews.repository;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.laioffer.tinnews.TinNewsApplication;
+import com.laioffer.tinnews.database.AppDatabase;
+import com.laioffer.tinnews.model.Article;
 import com.laioffer.tinnews.model.NewsResponse;
 import com.laioffer.tinnews.network.NewsApi;
 import com.laioffer.tinnews.network.RetrofitClient;
@@ -17,10 +22,15 @@ import retrofit2.Retrofit;
 public class NewsRepository {
 
     private  final NewsApi newsApi;
+    //for database
+    private final AppDatabase database;
+    private AsyncTask asyncTask;
 
     public NewsRepository(Context context) {
 
         newsApi = RetrofitClient.newInstance(context).create(NewsApi.class);
+        //for database
+        database = TinNewsApplication.getDatabase();
     }
 
     public LiveData<NewsResponse> getTopHeadlines(String country) {
@@ -65,5 +75,37 @@ public class NewsRepository {
                             }
                         });
         return everyThingLiveData;
+    }
+
+    // update database
+    public LiveData<Boolean> favoriteArticle(Article article) {
+        MutableLiveData<Boolean> isSuccessLiveData = new MutableLiveData<>();
+        asyncTask =
+                new AsyncTask<Void, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground (Void... Voids) {
+                        try {
+                            database.dao().saveArticle(article);
+                        } catch (Exception e) {
+                            Log.e("text", e.getMessage());
+                            return false;
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean isSuccess) {
+                        article.favorite = isSuccess;
+                        isSuccessLiveData.setValue(isSuccess);
+                    }
+                }.execute();
+        return isSuccessLiveData;
+    }
+
+    //cancel update database
+    public void onCancel() {
+        if (asyncTask != null) {
+            asyncTask.cancel(true);
+        }
     }
 }

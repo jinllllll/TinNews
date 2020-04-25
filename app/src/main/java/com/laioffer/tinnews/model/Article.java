@@ -1,16 +1,29 @@
 package com.laioffer.tinnews.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.util.Objects;
 
+@Entity
 public class Article {
+    @Ignore
     public Source source;
+    //above is an object. we do not want to save that. IF we do we need a type converter --
+    //because we can save string, but we can not save object
     public String author;
     public String content;
     public String description;
     public String publishedAt;
+    @NonNull
+    @PrimaryKey
     public String title;
     public String url;
     public String urlToImage;
+    //add favorite to keep state
+    public boolean favorite;
 
     @Override
     public boolean equals(Object o) {
