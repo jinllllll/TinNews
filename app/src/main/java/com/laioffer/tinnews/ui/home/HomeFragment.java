@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.laioffer.tinnews.R;
 import com.laioffer.tinnews.databinding.FragmentHomeBinding;
@@ -19,10 +20,12 @@ import com.laioffer.tinnews.repository.NewsRepository;
 import com.laioffer.tinnews.repository.NewsViewModelFactory;
 import com.mindorks.placeholderview.SwipeDecor;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements TinNewsCard.OnSwipeListener {
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,8 +43,6 @@ public class HomeFragment extends Fragment {
     private HomeViewModel viewModel;
     private FragmentHomeBinding binding;
 
-    // ... existing code
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -54,6 +55,7 @@ public class HomeFragment extends Fragment {
                         .setPaddingTop(20)
                         .setRelativeScale(0.01f));
 
+        //init listener
         binding.rejectBtn.setOnClickListener(v -> binding.swipeView.doSwipe(false));
         binding.acceptBtn.setOnClickListener(v -> binding.swipeView.doSwipe(true));
 
@@ -70,12 +72,42 @@ public class HomeFragment extends Fragment {
                                 Log.d("HomeFragment", newsResponse.toString());
 
                                 for(Article article : newsResponse.articles) {
-                                    TinNewsCard tinNewsCard = new TinNewsCard(article);
+                                    TinNewsCard tinNewsCard = new TinNewsCard(article, this);
                                     binding.swipeView.addView(tinNewsCard);
                                 }
                             }
                         });
 
+        viewModel
+                .onFavorite()
+                .observe(
+                        getViewLifecycleOwner(),
+                        isSuccess -> {
+                            if(isSuccess) {
+                                Toast.makeText(getContext(), "Success", LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "You might have liked before", LENGTH_SHORT).show();
+                            }
+                        }
+                );
+
     }
 
+    @Override
+    public void onLike(Article news) {
+        viewModel.setFavoriteArticleInput(news);
+    }
+
+    @Override
+    public void onDisLike(Article news) {
+        if (binding.swipeView.getChildCount()<3) {
+            viewModel.setCountryInput("us");
+        }
+    }
+
+//    @Override
+////    public void onDestryView() {
+////        super.onDestroyView();
+////        viewModel.onCancel();
+////    }
 }

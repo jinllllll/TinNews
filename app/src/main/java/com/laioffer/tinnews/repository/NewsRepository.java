@@ -33,6 +33,7 @@ public class NewsRepository {
         database = TinNewsApplication.getDatabase();
     }
 
+    //Retrofit send request and let other thread to handle it, give to main thread when ready
     public LiveData<NewsResponse> getTopHeadlines(String country) {
         MutableLiveData<NewsResponse> topHeadlinesLiveData = new MutableLiveData<>();
 
@@ -54,7 +55,7 @@ public class NewsRepository {
                 });
         return topHeadlinesLiveData;
     }
-
+    //Retrofit send request and let other thread to handle it, give to main thread when ready
     public LiveData<NewsResponse> searchNews(String query) {
         MutableLiveData<NewsResponse> everyThingLiveData = new MutableLiveData<>();
         newsApi.getEverything(query, 40)
@@ -77,10 +78,12 @@ public class NewsRepository {
         return everyThingLiveData;
     }
 
-    // update database
+    // update database -- asyncTask let other thread to handle request and let UI thread take over when ready
+    // thread pool controls how many thread we use now
     public LiveData<Boolean> favoriteArticle(Article article) {
         MutableLiveData<Boolean> isSuccessLiveData = new MutableLiveData<>();
         asyncTask =
+                //<input, progress Integer, result long>
                 new AsyncTask<Void, Void, Boolean>() {
                     @Override
                     protected Boolean doInBackground (Void... Voids) {
