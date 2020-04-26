@@ -14,11 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.GridLayout;
+import android.widget.Toast;
 
 import com.laioffer.tinnews.R;
 import com.laioffer.tinnews.databinding.FragmentSearchBinding;
+import com.laioffer.tinnews.model.Article;
 import com.laioffer.tinnews.repository.NewsRepository;
 import com.laioffer.tinnews.repository.NewsViewModelFactory;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,14 +46,26 @@ public class SearchFragment extends Fragment {
     private SearchViewModel viewModel;
     private FragmentSearchBinding binding;
 
-    // ... existing code
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // following 4 lines to init the viewAdapter and the viewManager
         SearchNewsAdapter newsAdapter = new SearchNewsAdapter();
+
+        //callback
+        newsAdapter.setLikeListener(new SearchNewsAdapter.LikeListener() {
+            @Override
+            public void onLike(Article article) {
+                viewModel.setFavoriteArticleInput(article);
+            }
+
+            @Override
+            public void onClick(Article article) {
+                //TODO
+            }
+        });
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
 
         //implement the spanSizeLookup for different grid size
@@ -79,8 +95,10 @@ public class SearchFragment extends Fragment {
         );
 
         NewsRepository repository = new NewsRepository(getContext());
+
         viewModel = new ViewModelProvider(this, new NewsViewModelFactory(repository))
                 .get(SearchViewModel.class);
+
         viewModel
                 .searchNews()
                 .observe(
@@ -91,6 +109,19 @@ public class SearchFragment extends Fragment {
                                 //+ to setArticles
                                 newsAdapter.setArticles(newsResponse.articles);
                             }
+                        });
+
+        viewModel
+                .onFavorite()
+                .observe(
+                        getViewLifecycleOwner(),
+                        isSuccess -> {
+                                if (isSuccess) {
+                                    Toast.makeText(requireActivity(), "Success", LENGTH_SHORT).show();
+                                    newsAdapter.notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(requireActivity(), "You might have liked before", LENGTH_SHORT).show();
+                                }
                         });
     }
 

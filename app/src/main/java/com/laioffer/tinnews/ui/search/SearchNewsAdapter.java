@@ -18,8 +18,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SearchNewsAdapter extends RecyclerView.Adapter<SearchNewsAdapter.SearchNewsViewHolder>{
+
+    //callback
+    interface LikeListener {
+        void onLike(Article article);
+        void onClick (Article article);
+    }
+
     //init data
     private List<Article> articles = new LinkedList<>();
+    private LikeListener likeListener;
+
+    public void setLikeListener(LikeListener likeListener) {
+        this.likeListener = likeListener;
+    }
 
     @NonNull
     @Override
@@ -44,8 +56,28 @@ public class SearchNewsAdapter extends RecyclerView.Adapter<SearchNewsAdapter.Se
         //new API server is giving me no Image now.. has to add this place holder line
         holder.title.setText(article.title);
 
-        Picasso.get().load(article.urlToImage).into(holder.newsImage);
-        holder.favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        //Picasso.get().load(article.urlToImage).into(holder.newsImage);
+        //callback
+        if (article.urlToImage==null) {
+            holder.newsImage.setImageResource(R.drawable.ic_empty_image);
+        } else {
+            Picasso.get().load(article.urlToImage).into(holder.newsImage);
+        }
+
+        //holder.favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+
+        if (article.favorite) {
+            holder.favorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+            holder.favorite.setOnClickListener(null);
+        } else {
+            holder.favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            holder.favorite.setOnClickListener(
+                    v-> {
+                        article.favorite = true;
+                        likeListener.onLike(article);
+                    }
+            );
+        }
     }
 
     @Override

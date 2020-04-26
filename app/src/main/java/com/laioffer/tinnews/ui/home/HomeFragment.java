@@ -62,7 +62,9 @@ public class HomeFragment extends Fragment implements TinNewsCard.OnSwipeListene
         NewsRepository repository = new NewsRepository(getContext());
         viewModel = new ViewModelProvider(this, new NewsViewModelFactory(repository))
                 .get(HomeViewModel.class);
+
         viewModel.setCountryInput("us");
+
         viewModel
                 .getTopHeadlines()
                 .observe(
@@ -83,13 +85,12 @@ public class HomeFragment extends Fragment implements TinNewsCard.OnSwipeListene
                 .observe(
                         getViewLifecycleOwner(),
                         isSuccess -> {
-                            if(isSuccess) {
+                            if (isSuccess) {
                                 Toast.makeText(getContext(), "Success", LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(getContext(), "You might have liked before", LENGTH_SHORT).show();
                             }
-                        }
-                );
+                        });
 
     }
 
@@ -105,9 +106,9 @@ public class HomeFragment extends Fragment implements TinNewsCard.OnSwipeListene
         }
     }
 
-//    @Override
-////    public void onDestryView() {
-////        super.onDestroyView();
-////        viewModel.onCancel();
-////    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewModel.onCancel();
+    }
 }
