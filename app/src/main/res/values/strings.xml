@@ -10,4 +10,8 @@
     <string name="title_search">Search</string>
     <string name="title_detail">Detail</string>
 
+    <string name="unknown_author">Unknown Author</string>
+    <string name="description">Description:</string>
+    <string name='author'>Author:</string>
+
 </resources>

@@ -8,4 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="NormalText" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+    </style>
+
+    <style name="MyAppTheme" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        //hide action bar
+        <!--        <item name="android:textViewStyle">@style/NormalText</item>-->  //override app
+        text theme
+    </style>
+
+
 </resources>
