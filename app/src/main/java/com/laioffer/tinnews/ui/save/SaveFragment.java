@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
@@ -67,7 +68,9 @@ public class SaveFragment extends Fragment {
         savedNewsAdapter.setOnClickListener(new SavedNewsAdapter.OnClickListener() {
             @Override
             public void onClick(Article article) {
-
+                SaveFragmentDirections.ActionTitleSaveToDetail actionTitleSaveToDetail = SaveFragmentDirections.actionTitleSaveToDetail();
+                actionTitleSaveToDetail.setArticle(article);
+                NavHostFragment.findNavController(SaveFragment.this).navigate(actionTitleSaveToDetail);
             }
 
             // unlike method to pass on to adapter for callback

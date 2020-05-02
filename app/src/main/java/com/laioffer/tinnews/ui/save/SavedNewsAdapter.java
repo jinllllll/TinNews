@@ -64,6 +64,12 @@ public class SavedNewsAdapter extends RecyclerView.Adapter<SavedNewsAdapter.Save
         } else {
             holder.icon.setImageResource(R.drawable.ic_favorite_border_black_24dp);
         }
+
+        holder.itemView.setOnClickListener(
+                v-> {
+                    onClickListener.onClick(article);
+                }
+        );
     }
 
     @Override

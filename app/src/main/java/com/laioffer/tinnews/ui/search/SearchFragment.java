@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.util.Log;
@@ -62,18 +63,21 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onClick(Article article) {
-                //TODO
+                //go into details
+                SearchFragmentDirections.ActionTitleSearchToDetail actionTitleSearchToDetail = SearchFragmentDirections.actionTitleSearchToDetail();
+                actionTitleSearchToDetail.setArticle(article);
+                NavHostFragment.findNavController(SearchFragment.this).navigate(actionTitleSearchToDetail);
             }
         });
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
 
         //implement the spanSizeLookup for different grid size
         gridLayoutManager.setSpanSizeLookup(
                 new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
-                        return position ==0? 2:1;
+                        return position == 0 ? 2 : 1;
                     }
                 }
         );
@@ -116,12 +120,12 @@ public class SearchFragment extends Fragment {
                 .observe(
                         getViewLifecycleOwner(),
                         isSuccess -> {
-                                if (isSuccess) {
-                                    Toast.makeText(requireActivity(), "Success", LENGTH_SHORT).show();
-                                    newsAdapter.notifyDataSetChanged();
-                                } else {
-                                    Toast.makeText(requireActivity(), "You might have liked before", LENGTH_SHORT).show();
-                                }
+                            if (isSuccess) {
+                                Toast.makeText(requireActivity(), "Success", LENGTH_SHORT).show();
+                                newsAdapter.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(requireActivity(), "You might have liked before", LENGTH_SHORT).show();
+                            }
                         });
     }
 
