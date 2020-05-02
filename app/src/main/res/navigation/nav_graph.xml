@@ -20,4 +20,11 @@
         android:name="com.laioffer.tinnews.ui.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/navigation_detail"
+        android:name="com.laioffer.tinnews.ui.detail.SavedNewsDetailFragment"
+        android:label="@string/title_detail"
+        tools:layout="@layout/fragment_saved_news_detail" />
+
 </navigation>

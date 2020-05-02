@@ -53,18 +53,13 @@ public class SearchNewsAdapter extends RecyclerView.Adapter<SearchNewsAdapter.Se
         // bind the data to the view
         // position: when we get to certain position we need certain article
         Article article = articles.get(position);
-        //new API server is giving me no Image now.. has to add this place holder line
-        holder.title.setText(article.title);
 
-        //Picasso.get().load(article.urlToImage).into(holder.newsImage);
         //callback
         if (article.urlToImage==null) {
             holder.newsImage.setImageResource(R.drawable.ic_empty_image);
         } else {
             Picasso.get().load(article.urlToImage).into(holder.newsImage);
         }
-
-        //holder.favorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
 
         if (article.favorite) {
             holder.favorite.setImageResource(R.drawable.ic_favorite_black_24dp);
@@ -89,15 +84,11 @@ public class SearchNewsAdapter extends RecyclerView.Adapter<SearchNewsAdapter.Se
     public static class SearchNewsViewHolder extends RecyclerView.ViewHolder {
         ImageView newsImage;
         ImageView favorite;
-        //new API server is giving me no Image now.. has to add this place holder line
-        TextView title;
 
         public SearchNewsViewHolder(View itemView) {
             super(itemView);
             newsImage = itemView.findViewById(R.id.image);
             favorite = itemView.findViewById(R.id.favorite);
-            //new API server is giving me no Image now.. has to add this place holder line
-            title = itemView.findViewById(R.id.title);
         }
     }
 }

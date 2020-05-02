@@ -14,6 +14,8 @@ import com.laioffer.tinnews.model.NewsResponse;
 import com.laioffer.tinnews.network.NewsApi;
 import com.laioffer.tinnews.network.RetrofitClient;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,7 +23,7 @@ import retrofit2.Retrofit;
 
 public class NewsRepository {
 
-    private  final NewsApi newsApi;
+    private final NewsApi newsApi;
     //for database
     private final AppDatabase database;
     private AsyncTask asyncTask;
@@ -55,6 +57,7 @@ public class NewsRepository {
                 });
         return topHeadlinesLiveData;
     }
+
     //Retrofit send request and let other thread to handle it, give to main thread when ready
     public LiveData<NewsResponse> searchNews(String query) {
         MutableLiveData<NewsResponse> everyThingLiveData = new MutableLiveData<>();
@@ -86,7 +89,7 @@ public class NewsRepository {
                 //<input, progress Integer, result long>
                 new AsyncTask<Void, Void, Boolean>() {
                     @Override
-                    protected Boolean doInBackground (Void... Voids) {
+                    protected Boolean doInBackground(Void... Voids) {
                         try {
                             database.dao().saveArticle(article);
                         } catch (Exception e) {
@@ -103,6 +106,17 @@ public class NewsRepository {
                     }
                 }.execute();
         return isSuccessLiveData;
+    }
+
+    // get data from db
+    public LiveData<List<Article>> getAllSavedArticles() {
+        return database.dao().getAllArticles();
+    }
+
+    // delete data from db
+    public void deleteSavedArticle(Article article) {
+        AsyncTask.execute(
+                () -> database.dao().deleteArticle(article));
     }
 
     //cancel update database

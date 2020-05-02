@@ -8,5 +8,6 @@
     <string name="title_home">Home</string>
     <string name="title_save">Save</string>
     <string name="title_search">Search</string>
+    <string name="title_detail">Detail</string>
 
 </resources>
